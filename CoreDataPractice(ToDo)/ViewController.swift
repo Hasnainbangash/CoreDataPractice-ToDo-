@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     // Reference to Imanaged object context
@@ -57,6 +57,7 @@ class ViewController: UIViewController {
             // TODO: Create a task object
             let newToDo = ToDo(context: self.context)
             newToDo.toDoText = textField.text
+            newToDo.date = Date()
             
             // TODO: Save the data
             do {
@@ -93,9 +94,16 @@ extension ViewController: UITableViewDataSource {
         // TODO: Get todo task from array and set the label
         let toDo = self.item![indexPath.row]
         cell.toDoTextLabel.text = toDo.toDoText
+        if let date = toDo.date {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "d MMM yyyy"
+            cell.timeLabel.text = dateFormatter.string(from: date)
+        } else {
+            cell.timeLabel.text = "No Date"
+        }
         return cell
     }
-
+    
 }
 
 extension ViewController: UITableViewDelegate {
