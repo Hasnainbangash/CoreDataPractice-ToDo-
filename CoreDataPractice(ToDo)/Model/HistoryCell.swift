@@ -1,5 +1,5 @@
 //
-//  TaskCell.swift
+//  HistoryCell.swift
 //  CoreDataPractice(ToDo)
 //
 //  Created by Elexoft on 12/12/2024.
@@ -7,9 +7,8 @@
 
 import UIKit
 
-class TaskCell: UITableViewCell {
+class HistoryCell: UITableViewCell {
 
-    @IBOutlet weak var isSelectedButton: UIButton!
     @IBOutlet weak var toDoTextLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     

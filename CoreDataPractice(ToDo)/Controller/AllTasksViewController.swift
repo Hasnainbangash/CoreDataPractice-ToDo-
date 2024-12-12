@@ -8,6 +8,8 @@
 import UIKit
 import CoreData
 
+var item: [ToDo]?
+
 class AllTasksViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
@@ -15,7 +17,7 @@ class AllTasksViewController: UIViewController {
     // Reference to Imanaged object context
     let context = PersistentStorage.shared.context
     
-    var item: [ToDo]?
+//    var item: [ToDo]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +32,9 @@ class AllTasksViewController: UIViewController {
     func fetchTasks() {
         do {
             let request = ToDo.fetchRequest() as NSFetchRequest<ToDo>
-            self.item = try context.fetch(request)
+            let pred = NSPredicate(format: "isCompleted == %@", NSNumber(value: false))
+            request.predicate = pred
+            item = try context.fetch(request)
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -58,6 +62,7 @@ class AllTasksViewController: UIViewController {
             let newToDo = ToDo(context: self.context)
             newToDo.toDoText = textField.text
             newToDo.date = Date()
+            newToDo.isCompleted = false
             
             // TODO: Save the data
             do {
@@ -81,6 +86,9 @@ class AllTasksViewController: UIViewController {
         
     }
     
+    @IBAction func historyTapped(_ sender: Any) {
+        performSegue(withIdentifier: "AllTasksScreenToHistoryScreen", sender: self)
+    }
 }
 
 extension AllTasksViewController: UITableViewDataSource {
@@ -92,9 +100,9 @@ extension AllTasksViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCellReuseableCell", for: indexPath) as! TaskCell
         // TODO: Get todo task from array and set the label
-        let toDo = self.item![indexPath.row]
-        cell.toDoTextLabel.text = toDo.toDoText
-        if let date = toDo.date {
+        let toDo = item?[indexPath.row]
+        cell.toDoTextLabel.text = toDo?.toDoText
+        if let date = toDo?.date {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "d MMM yyyy"
             cell.timeLabel.text = dateFormatter.string(from: date)
@@ -109,14 +117,14 @@ extension AllTasksViewController: UITableViewDataSource {
 extension AllTasksViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let toDo = self.item![indexPath.row]
+        let toDo = item?[indexPath.row]
         
         // Create alert
         let alert = UIAlertController(title: "Edit Task", message: "Edit your Task:", preferredStyle: .alert)
         alert.addTextField()
         
-        let textField = alert.textFields![0]
-        textField.text = toDo.toDoText
+        let textField = alert.textFields?[0]
+        textField?.text = toDo?.toDoText
         
         // Configure button handler
         let saveButton = UIAlertAction(title: "Save", style: .default) { (action) in
@@ -125,7 +133,7 @@ extension AllTasksViewController: UITableViewDelegate {
             let textField = alert.textFields![0]
             
             // TODO: Edit task property of todo object
-            toDo.toDoText = textField.text
+            toDo?.toDoText = textField.text
             
             // TODO: Save the data
             do {
@@ -150,15 +158,39 @@ extension AllTasksViewController: UITableViewDelegate {
         
     }
     
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let action = UIContextualAction(style: .normal, title: "Completed") { action, view, completionHandler in
+            // TODO: Which task to remove
+            let taskToRemove = item?[indexPath.row]
+            
+            // TODO: Remove the completed task
+            taskToRemove?.isCompleted = true
+            
+            // TODO: Save the data
+            do {
+                try self.context.save()
+            } catch let error {
+                print(error.localizedDescription)
+            }
+            
+            // TODO: Re-fetch the data
+            self.fetchTasks()
+        }
+        
+        return UISwipeActionsConfiguration(actions: [action])
+        
+    }
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let action = UIContextualAction(style: .destructive, title: "Delete") {action, view, completionHandler in
             
             // TODO: Which task to remove
-            let taskToRemove = self.item![indexPath.row]
+            let taskToDelete = item?[indexPath.row]
             
-            // TODO: Remove the task
-            self.context.delete(taskToRemove)
+            // TODO: Delete the task
+            self.context.delete(taskToDelete!)
             
             // TODO: Save the data
             do {
