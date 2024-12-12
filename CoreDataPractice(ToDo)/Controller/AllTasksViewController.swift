@@ -75,6 +75,8 @@ class AllTasksViewController: UIViewController {
         
         alert.addTextField { (textField) in
             textField.placeholder = "Enter your Task"
+            textField.autocapitalizationType = .words
+            textField.keyboardType = .default
         }
         
         let submitButton = UIAlertAction(title: "Add", style: .default) { (action) in
@@ -157,7 +159,11 @@ extension AllTasksViewController: UITableViewDelegate {
         
         // Create alert
         let alert = UIAlertController(title: "Edit Task", message: "Edit your Task:", preferredStyle: .alert)
-        alert.addTextField()
+        alert.addTextField { (textField) in
+            textField.placeholder = "Enter your Task"
+            textField.autocapitalizationType = .words
+            textField.keyboardType = .default
+        }
         
         let textField = alert.textFields?[0]
         textField?.text = toDo?.toDoText
