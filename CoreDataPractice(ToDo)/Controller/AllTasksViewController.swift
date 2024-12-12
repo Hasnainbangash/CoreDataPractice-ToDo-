@@ -13,6 +13,7 @@ var item: [ToDo]?
 class AllTasksViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     // Reference to Imanaged object context
     let context = PersistentStorage.shared.context
@@ -25,6 +26,8 @@ class AllTasksViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
+        
+        searchBar.delegate = self
         
         fetchTasks()
     }
@@ -42,6 +45,27 @@ class AllTasksViewController: UIViewController {
             
         } catch {
             
+        }
+    }
+    
+    func filterContent(for searchText: String) {
+        if searchText.isEmpty {
+            fetchTasks()
+        } else {
+            let request = ToDo.fetchRequest() as NSFetchRequest<ToDo>
+            let pred = NSPredicate(format: "toDoText CONTAINS %@", searchText)
+            let anotherPred = NSPredicate(format: "isCompleted == %@", NSNumber(value: false))
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [pred, anotherPred])
+            request.predicate = compoundPredicate
+            
+            do {
+                item = try context.fetch(request)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            } catch let error {
+                print(error.localizedDescription)
+            }
         }
     }
     
@@ -88,6 +112,18 @@ class AllTasksViewController: UIViewController {
     
     @IBAction func historyTapped(_ sender: Any) {
         performSegue(withIdentifier: "AllTasksScreenToHistoryScreen", sender: self)
+    }
+}
+
+extension AllTasksViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterContent(for: searchText)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        filterContent(for: searchBar.text ?? "")
+        tableView.reloadData()
     }
 }
 
