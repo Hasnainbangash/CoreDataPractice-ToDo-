@@ -11,6 +11,7 @@ class TaskCell: UITableViewCell {
 
     @IBOutlet weak var isSelectedButton: UIButton!
     @IBOutlet weak var toDoTextLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
