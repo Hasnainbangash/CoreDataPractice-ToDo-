@@ -54,7 +54,7 @@ class ViewController: UIViewController {
             // TODO: Get the textfield for the alert
             let textField = alert.textFields![0]
             
-            // TODO: Create a person object
+            // TODO: Create a task object
             let newToDo = ToDo(context: self.context)
             newToDo.toDoText = textField.text
             
@@ -104,7 +104,7 @@ extension ViewController: UITableViewDelegate {
         let toDo = self.item![indexPath.row]
         
         // Create alert
-        let alert = UIAlertController(title: "Edit Person", message: "Edit name:", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Edit Task", message: "Edit your Task:", preferredStyle: .alert)
         alert.addTextField()
         
         let textField = alert.textFields![0]
@@ -116,7 +116,7 @@ extension ViewController: UITableViewDelegate {
             // TODO: Get the textfield for the alert
             let textField = alert.textFields![0]
             
-            // TODO: Edit name property of person object
+            // TODO: Edit task property of todo object
             toDo.toDoText = textField.text
             
             // TODO: Save the data
@@ -146,11 +146,11 @@ extension ViewController: UITableViewDelegate {
         
         let action = UIContextualAction(style: .destructive, title: "Delete") {action, view, completionHandler in
             
-            // TODO: Which person to remove
-            let personToRemove = self.item![indexPath.row]
+            // TODO: Which task to remove
+            let taskToRemove = self.item![indexPath.row]
             
-            // TODO: Remove the person
-            self.context.delete(personToRemove)
+            // TODO: Remove the task
+            self.context.delete(taskToRemove)
             
             // TODO: Save the data
             do {
