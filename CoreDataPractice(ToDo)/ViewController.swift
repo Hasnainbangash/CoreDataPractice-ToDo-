@@ -100,4 +100,71 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let toDo = self.item![indexPath.row]
+        
+        // Create alert
+        let alert = UIAlertController(title: "Edit Person", message: "Edit name:", preferredStyle: .alert)
+        alert.addTextField()
+        
+        let textField = alert.textFields![0]
+        textField.text = toDo.toDoText
+        
+        // Configure button handler
+        let saveButton = UIAlertAction(title: "Save", style: .default) { (action) in
+            
+            // TODO: Get the textfield for the alert
+            let textField = alert.textFields![0]
+            
+            // TODO: Edit name property of person object
+            toDo.toDoText = textField.text
+            
+            // TODO: Save the data
+            do {
+                try self.context.save()
+            } catch {
+                
+            }
+            
+            // TODO: Re-fetch the data
+            self.fetchTasks()
+            
+        }
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            print("Cancel Button is pressed")
+        }
+        
+        alert.addAction(saveButton)
+        alert.addAction(cancelButton)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let action = UIContextualAction(style: .destructive, title: "Delete") {action, view, completionHandler in
+            
+            // TODO: Which person to remove
+            let personToRemove = self.item![indexPath.row]
+            
+            // TODO: Remove the person
+            self.context.delete(personToRemove)
+            
+            // TODO: Save the data
+            do {
+                try self.context.save()
+            } catch let error {
+                print(error.localizedDescription)
+            }
+            
+            // TODO: Re-fetch the data
+            self.fetchTasks()
+            
+        }
+        
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
 }
