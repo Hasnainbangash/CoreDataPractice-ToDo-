@@ -30,7 +30,7 @@
                                         <rect key="frame" x="0.0" y="56" width="393" height="693"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="dT8-Lq-bPP">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TaskCellReuseableCell" id="dT8-Lq-bPP" customClass="TaskCell" customModule="CoreDataPractice_ToDo_" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="50" width="393" height="57.666667938232422"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dT8-Lq-bPP" id="Ejc-hE-OgJ">
@@ -69,6 +69,10 @@
                                                         <constraint firstAttribute="trailing" secondItem="a0c-oQ-NaL" secondAttribute="trailing" constant="16.5" id="z2o-BZ-LYj"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
+                                                <connections>
+                                                    <outlet property="isSelectedButton" destination="xex-aA-qua" id="tMx-Yk-C5W"/>
+                                                    <outlet property="toDoTextLabel" destination="6Xk-gY-vAC" id="VSw-Aa-Ktn"/>
+                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
@@ -87,6 +91,9 @@
                     <navigationItem key="navigationItem" title="ALL TASKS" id="5PX-m0-dCm">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="0pS-ph-pUl">
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addTapped:" destination="BYZ-38-t0r" id="zfq-zy-1Zt"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
