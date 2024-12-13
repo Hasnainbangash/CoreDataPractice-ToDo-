@@ -65,5 +65,24 @@ extension HistoryViewController: UITableViewDataSource {
 }
 
 extension HistoryViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let action = UIContextualAction(style: .destructive, title: "Delete") {action, view, completionHandler in
+            
+            // TODO: Which task to remove
+            let taskToDelete = item?[indexPath.row]
+            
+            // TODO: Delete the task
+            self.context.delete(taskToDelete!)
+            
+            // TODO: Save the data
+            PersistentStorage.shared.saveContext()
+            
+            // TODO: Re-fetch the data
+            self.fetchTasks()
+            
+        }
+        
+        return UISwipeActionsConfiguration(actions: [action])
+    }
 }
