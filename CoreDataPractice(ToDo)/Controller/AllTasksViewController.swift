@@ -82,20 +82,16 @@ class AllTasksViewController: UIViewController {
         let submitButton = UIAlertAction(title: "Add", style: .default) { (action) in
             
             // TODO: Get the textfield for the alert
-            let textField = alert.textFields![0]
+            let textField = alert.textFields?[0]
             
             // TODO: Create a task object
             let newToDo = ToDo(context: self.context)
-            newToDo.toDoText = textField.text
+            newToDo.toDoText = textField?.text
             newToDo.date = Date()
             newToDo.isCompleted = false
             
             // TODO: Save the data
-            do {
-                try self.context.save()
-            } catch {
-                
-            }
+            PersistentStorage.shared.saveContext()
             
             // TODO: Re-fetch the data
             self.fetchTasks()
@@ -136,18 +132,18 @@ extension AllTasksViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCellReuseableCell", for: indexPath) as! TaskCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCellReuseableCell", for: indexPath) as? TaskCell
         // TODO: Get todo task from array and set the label
         let toDo = item?[indexPath.row]
-        cell.toDoTextLabel.text = toDo?.toDoText
+        cell?.toDoTextLabel.text = toDo?.toDoText
         if let date = toDo?.date {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "d MMM yyyy"
-            cell.timeLabel.text = dateFormatter.string(from: date)
+            cell?.timeLabel.text = dateFormatter.string(from: date)
         } else {
-            cell.timeLabel.text = "No Date"
+            cell?.timeLabel.text = "No Date"
         }
-        return cell
+        return cell ?? UITableViewCell()
     }
     
 }
@@ -172,17 +168,13 @@ extension AllTasksViewController: UITableViewDelegate {
         let saveButton = UIAlertAction(title: "Save", style: .default) { (action) in
             
             // TODO: Get the textfield for the alert
-            let textField = alert.textFields![0]
+            let textField = alert.textFields?[0]
             
             // TODO: Edit task property of todo object
-            toDo?.toDoText = textField.text
+            toDo?.toDoText = textField?.text
             
             // TODO: Save the data
-            do {
-                try self.context.save()
-            } catch {
-                
-            }
+            PersistentStorage.shared.saveContext()
             
             // TODO: Re-fetch the data
             self.fetchTasks()
@@ -210,11 +202,7 @@ extension AllTasksViewController: UITableViewDelegate {
             taskToRemove?.isCompleted = true
             
             // TODO: Save the data
-            do {
-                try self.context.save()
-            } catch let error {
-                print(error.localizedDescription)
-            }
+            PersistentStorage.shared.saveContext()
             
             // TODO: Re-fetch the data
             self.fetchTasks()
@@ -235,11 +223,7 @@ extension AllTasksViewController: UITableViewDelegate {
             self.context.delete(taskToDelete!)
             
             // TODO: Save the data
-            do {
-                try self.context.save()
-            } catch let error {
-                print(error.localizedDescription)
-            }
+            PersistentStorage.shared.saveContext()
             
             // TODO: Re-fetch the data
             self.fetchTasks()
