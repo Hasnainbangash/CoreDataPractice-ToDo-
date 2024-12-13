@@ -69,17 +69,31 @@ extension HistoryViewController: UITableViewDelegate {
         
         let action = UIContextualAction(style: .destructive, title: "Delete") {action, view, completionHandler in
             
-            // TODO: Which task to remove
-            let taskToDelete = item?[indexPath.row]
+            let alert = UIAlertController(title: "Delete", message: "Are you sure you want to delete?", preferredStyle: .actionSheet)
             
-            // TODO: Delete the task
-            self.context.delete(taskToDelete!)
+            let deleteButton = UIAlertAction(title: "Delete", style: .destructive) { (action) in
+                
+                // TODO: Which task to remove
+                let taskToDelete = item?[indexPath.row]
+                
+                // TODO: Delete the task
+                self.context.delete(taskToDelete!)
+                
+                // TODO: Save the data
+                PersistentStorage.shared.saveContext()
+                
+                // TODO: Re-fetch the data
+                self.fetchTasks()
+            }
             
-            // TODO: Save the data
-            PersistentStorage.shared.saveContext()
+            let cancelButton = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+                print("Cancel Button is pressed")
+            }
             
-            // TODO: Re-fetch the data
-            self.fetchTasks()
+            alert.addAction(deleteButton)
+            alert.addAction(cancelButton)
+            
+            self.present(alert, animated: true, completion: nil)
             
         }
         
