@@ -19,7 +19,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="MV2-gS-MCf">
                                 <rect key="frame" x="0.0" y="103" width="393" height="749"/>
                                 <subviews>
-                                    <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="a2g-IZ-Jqc">
+                                    <searchBar contentMode="redraw" placeholder="Search" translatesAutoresizingMaskIntoConstraints="NO" id="a2g-IZ-Jqc">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <connections>
